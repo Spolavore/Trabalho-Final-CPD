@@ -9,7 +9,8 @@ class ListaEncadeada:
 
     def insere_no_inicio(self, novo_id, novo_content='', type='Players', rating=None):
         if type == 'User':
-            novoNodo = User(novo_id, rating)
+            novoNodo = User(novo_id)
+            novoNodo.add_rating(rating)
         elif type == 'Players':
             novoNodo = Players(novo_id, novo_content)
        

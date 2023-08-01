@@ -13,10 +13,9 @@ if __name__== '__main__':
             data = linha.split(',', 2)
             jogadores.add(data, 'Player')
 
-    # adicionando a nota e os usuários
+    # adicionando a nota e os usuários (essa parte do codigo ta demorando um pouco pra rodar)
     with open('./tables/minirating.csv') as rating:
         next(rating)
-        users_ja_inserido = []
         for linha in rating:
             # pegando e separando informações contidas na linhas
             infos = linha.split(',', 3)
@@ -30,9 +29,16 @@ if __name__== '__main__':
             player.set_rating(rating)
             
             #inserindo usuários
-            if userId not in users_ja_inserido:
-                users.add(userId, 'User', rating)
-                users_ja_inserido.append(userId)
+            #busca o usuário na lista
+            user_on_search = users.consulta(userId)
 
-        print(users.consulta(57002).ratings)
+            # caso ele não esteja ainda na hash adiciona ele
+            if user_on_search == None:
+                users.add(userId, 'User', rating)
+            else:
+                # se o user já foi inserido então apenas adiciona a nova nota dada
+                # a determinado jogador na lista de ratings
+                user_on_search.add_rating(float(rating))
+
+        print(users.consulta(32010).ratings)
     
