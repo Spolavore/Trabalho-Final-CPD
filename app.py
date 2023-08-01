@@ -6,13 +6,12 @@ if __name__== '__main__':
     jogadores = Hash(8000)
     
     with open('./tables/players.csv') as players:
-        lines = players.readlines()
-        for i in range(1, len(lines)):
-            jogadores.add(lines[i][0:len(lines[i])-1])
+        next(players)
+        for linha in players:
+            data = linha.split(',',2)
+            jogadores.add(data)
+
 
     jogadores.consulta(210202)
-    trie = Trie()
-    trie.insere('Lionel Messi')
-    trie.insere('Neymar Junior')
-    trie.insere('Neyaldina Junior')
+
 

@@ -20,15 +20,13 @@ class ListaEncadeada:
         return contador
 
     def getInfos(self, id):
-        qtd_consultas = 0
-        aux = self.inicio
-        while aux != None:
-            if aux.id == id:
-                ListaEncadeada.lista_consultas.append(qtd_consultas)                
-                return (aux, qtd_consultas)
+        print(id)
+        aux_nodo = self.inicio
+        while aux_nodo != None:
+            if id == aux_nodo.id:
+                return aux_nodo
             else:
-                aux = aux.proximo
-                qtd_consultas+=1
+                aux_nodo = aux_nodo.proximo
 
     def printa_lista(self):
         aux = self.inicio
@@ -53,7 +51,8 @@ class Hash:
         key = (id % self.tamanho) # modulo do id pelo tamanho
         if key not in Hash.posicoes_usadas:
             Hash.posicoes_usadas.append(key)
-
+        
+       
         return key
         
 
@@ -68,4 +67,4 @@ class Hash:
     def consulta(self, id):
         key = int(id)
         position = self.get_position(key)
-        print( self.hash_table[position].getInfos(id))
+        print(self.hash_table[position].getInfos(key).content)
