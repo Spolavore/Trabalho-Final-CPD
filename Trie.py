@@ -1,3 +1,4 @@
+from Hash import Hash
 class Nodo:
     def __init__(self):
         self.filhos = {}

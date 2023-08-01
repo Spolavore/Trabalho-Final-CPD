@@ -1,4 +1,5 @@
 from Players import Players
+from User import User
 
 class ListaEncadeada:
     lista_consultas = []
@@ -6,8 +7,12 @@ class ListaEncadeada:
     def __init__(self):
         self.inicio = None  
 
-    def insere_no_inicio(self, novo_id ,novo_content):
-        novoNodo = Players(novo_id, novo_content)
+    def insere_no_inicio(self, novo_id, novo_content='', type='Players', rating=None):
+        if type == 'User':
+            novoNodo = User(novo_id, rating)
+        elif type == 'Players':
+            novoNodo = Players(novo_id, novo_content)
+       
         novoNodo.proximo = self.inicio
         self.inicio = novoNodo
  
@@ -20,7 +25,6 @@ class ListaEncadeada:
         return contador
 
     def getInfos(self, id):
-        print(id)
         aux_nodo = self.inicio
         while aux_nodo != None:
             if id == aux_nodo.id:
@@ -57,14 +61,20 @@ class Hash:
         
 
     # vai precisar ser mudado
-    def add(self, infos):
-        id = int(infos[0])
-        content = infos[1:]
-        # pega a posicao que o dado deve ser inserido com base na funcao hash
-        position = self.get_position(id) 
-        self.hash_table[position].insere_no_inicio(id, content)
+    def add(self, infos, type='Player', rating=None):
+        if type == 'Player':
+            id = int(infos[0])
+            content = infos[1:]
+            # pega a posicao que o dado deve ser inserido com base na funcao hash
+            position = self.get_position(id) 
+            self.hash_table[position].insere_no_inicio(id, content)
+        elif type == 'User':
+            #infos == id
+            position = self.get_position(int(infos))
+            self.hash_table[position].insere_no_inicio(novo_id=infos, type='User', rating=rating)
     
+
     def consulta(self, id):
         key = int(id)
         position = self.get_position(key)
-        print(self.hash_table[position].getInfos(key).content)
+        return self.hash_table[position].getInfos(key)

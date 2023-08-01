@@ -4,7 +4,17 @@ class Players:
         self.id = id    # id da fifa
         self.content = content # contem o nome do jogador na posicao 0 e a sua posicao nos nodos seguintes
         self.proximo = proximo_nodo
-        self.rating = 0
-        self.total_avaliancoes = 0
+        self.rating = 0 
+        self.total_avaliacoes = 0
+
+    def set_rating(self,rating):
+        if self.total_avaliacoes == 0:
+            self.rating += rating
+        else:
+            self.rating = self.rating * self.total_avaliacoes + rating
+        
+        self.total_avaliacoes += 1
+        self.rating = self.rating / self.total_avaliacoes
+
 
     
