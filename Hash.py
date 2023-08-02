@@ -7,10 +7,10 @@ class ListaEncadeada:
     def __init__(self):
         self.inicio = None  
 
-    def insere_no_inicio(self, novo_id, novo_content='', type='Players', player=None):
+    def insere_no_inicio(self, novo_id, novo_content='', type='Players', playerInfos=None):
         if type == 'User':
             novoNodo = User(novo_id)
-            novoNodo.add_rating(player)
+            novoNodo.add_rating(playerInfos)
         elif type == 'Players':
             novoNodo = Players(novo_id, novo_content)
        
@@ -62,7 +62,7 @@ class Hash:
         
 
     # vai precisar ser mudado
-    def add(self, infos, type='Player', player=None):
+    def add(self, infos, type='Player', playerInfos=None):
         if type == 'Player':
             id = int(infos[0])
             content = infos[1:]
@@ -72,7 +72,7 @@ class Hash:
         elif type == 'User':
             #infos == id
             position = self.get_position(int(infos))
-            self.hash_table[position].insere_no_inicio(novo_id=infos, type='User', player=player)
+            self.hash_table[position].insere_no_inicio(novo_id=infos, type='User', playerInfos=playerInfos)
     
 
     def consulta(self, id):

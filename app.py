@@ -34,11 +34,11 @@ if __name__== '__main__':
 
             # caso ele não esteja ainda na hash adiciona ele
             if user_on_search == None:
-                users.add(userId, 'User', player)
+                users.add(userId, 'User', (player, player.rating))
             else:
                 # se o user já foi inserido então apenas adiciona a nova nota dada
                 # a determinado jogador na lista de ratings
                 user_on_search.add_rating((player, player.rating))
 
         print(users.consulta(32010).players_rated)
-    
+        #verificar pois nao deveria aparecer tantos elemento
