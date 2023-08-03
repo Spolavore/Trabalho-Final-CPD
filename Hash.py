@@ -71,7 +71,7 @@ class Hash:
             self.hash_table[position].insere_no_inicio(id, content)
         elif type == 'User':
             #infos == id
-            position = self.get_position(int(infos))
+            position = self.get_position(infos)
             self.hash_table[position].insere_no_inicio(novo_id=infos, type='User', playerInfos=playerInfos)
     
 
