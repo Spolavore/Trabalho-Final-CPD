@@ -1,5 +1,5 @@
 import time
-import pandas as pd
+import csv
 from Hash import Hash
 from Trie import Trie
 
@@ -7,50 +7,46 @@ from Trie import Trie
 if __name__== '__main__':
     start_time = time.time()
     # pré-processamento #
-    jogadores = Hash(10000)
+    jogadores = Hash(15000)
     users = Hash(10000)
 
-    #adicionando o jogador e suas características
+    # #adicionando o jogador e suas características
     with open('./tables/players.csv') as players:
         next(players)
         for linha in players:
             data = linha.split(',', 2)
+           
             jogadores.add(data, 'Player')
 
-
-    ratings = pd.read_csv('./tables/rating.csv')
-    print(ratings)
-
-
     # # adicionando a nota e os usuários (essa parte do codigo ta demorando um pouco pra rodar)
-    # with open('./tables/rating.csv') as rating:
-    #     next(rating)
+    consulta = 0
+    with open('./tables/rating.csv', 'r') as rating:
+        csvreader = csv.reader(rating)
+        next(csvreader)
+        
 
-    #     ids_already_searched = []
-    #     players_already_searched = []
-    #     index = -1
+        lastIdChecked = None
+        players_cache = []
+        index = -1
+        for row in csvreader:
+            userId = int(row[0])
+            sofifa_id = int(row[1])
+            rating = float(row[2])
 
-    #     for linha in rating:
-    #         # pegando e separando informações contidas na linhas
+            if lastIdChecked != sofifa_id:
+                lastIdChecked = sofifa_id
+                player = jogadores.consulta(sofifa_id)
+                players_cache.append(player)
+                index += 1
+               
+            else:
+                player = players_cache[index]
+                player.set_rating(rating)
+           
+        
 
-    #         infos = linha.split(',', 3)
-    #         userId = infos[0]
-    #         fifaId = infos[1]
-    #         rating =  float(infos[2])
-
-    #         # consultado qual player deve ter a nota alterada
-    #         if fifaId not in ids_already_searched:
-    #             player = jogadores.consulta(fifaId)
-    #             ids_already_searched.append(fifaId)
-    #             players_already_searched.append(player)
-    #             #mudando o rating desse jogador pego
-    #             player.set_rating(rating)
-    #             index += 1
-    #         else:
-    #             player = players_already_searched[index]
-    #             player.set_rating(rating)
-
-            
+                
+      
             #inserindo usuários
             #busca o usuário na lista
             # user_on_search = users.consulta(userId)
@@ -65,4 +61,5 @@ if __name__== '__main__':
 
         #verificar pois nao deveria aparecer tantos elemento
 
+    print(jogadores.consulta(158023).get_rating())
     print(time.time() - start_time, 's')

@@ -54,10 +54,6 @@ class Hash:
 # está ou deve ser inserido
     def get_position(self, id):
         key = (id % self.tamanho) # modulo do id pelo tamanho
-        if key not in Hash.posicoes_usadas:
-            Hash.posicoes_usadas.append(key)
-        
-       
         return key
         
 
@@ -67,11 +63,13 @@ class Hash:
             id = int(infos[0])
             content = infos[1:]
             # pega a posicao que o dado deve ser inserido com base na funcao hash
-            position = self.get_position(id) 
+            position = id % self.tamanho
             self.hash_table[position].insere_no_inicio(id, content)
         elif type == 'User':
             #infos == id
             position = self.get_position(infos)
+            position = int(id) % self.tamanho
+
             self.hash_table[position].insere_no_inicio(novo_id=infos, type='User', playerInfos=playerInfos)
     
 
