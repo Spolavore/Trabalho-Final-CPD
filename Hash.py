@@ -10,7 +10,7 @@ class ListaEncadeada:
     def insere_no_inicio(self, novo_id, novo_content='', type='Players', playerInfos=None):
         if type == 'User':
             novoNodo = User(novo_id)
-            novoNodo.add_rating(playerInfos)
+            novoNodo.players_rated.append(playerInfos)
         elif type == 'Players':
             novoNodo = Players(novo_id, novo_content)
        
@@ -26,18 +26,13 @@ class ListaEncadeada:
         return contador
 
     def getInfos(self, id):
+        
         aux_nodo = self.inicio
         while aux_nodo != None:
             if id == aux_nodo.id:
                 return aux_nodo
             else:
                 aux_nodo = aux_nodo.proximo
-
-    def printa_lista(self):
-        aux = self.inicio
-        while aux != None:
-            print(aux.id)
-            aux = aux.proximo
 
 # Definicao da class hash,
 # recebe na inicializacao o tamanho dela
@@ -67,13 +62,11 @@ class Hash:
             self.hash_table[position].insere_no_inicio(id, content)
         elif type == 'User':
             #infos == id
-            position = self.get_position(infos)
-            position = int(id) % self.tamanho
-
+            position = int(infos) % self.tamanho
             self.hash_table[position].insere_no_inicio(novo_id=infos, type='User', playerInfos=playerInfos)
     
 
     def consulta(self, id):
         key = int(id)
-        position = self.get_position(key)
+        position = key % self.tamanho
         return self.hash_table[position].getInfos(key)

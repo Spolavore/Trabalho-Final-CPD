@@ -2,6 +2,7 @@
 class Players:
     def __init__(self, id, content, proximo_nodo=None):
         self.id = id    # id da fifa
+        self.tags = []
         self.content = content # contem o nome do jogador na posicao 0 e a sua posicao nos nodos seguintes
         self.proximo = proximo_nodo
         self.rating_acumulative = 0 
