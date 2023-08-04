@@ -36,6 +36,7 @@ if __name__== '__main__':
             if lastIdChecked != sofifa_id:
                 lastIdChecked = sofifa_id
                 player = jogadores.consulta(sofifa_id)
+                player.set_rating(rating)
                 players_cache.append(player)
                 index += 1
                
