@@ -4,7 +4,7 @@ class Players:
         self.id = id    # id da fifa
         self.name = content[0]
         self.tags = []
-        self.player_positions = content[1:] # contem o nome do jogador na posicao 0 e a sua posicao nos nodos seguintes
+        self.player_positions = content[1]# contem o nome do jogador na posicao 0 e a sua posicao nos nodos seguintes
         self.rating_acumulative = 0 
         self.total_avaliacoes = 0
 

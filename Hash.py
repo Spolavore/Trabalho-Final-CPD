@@ -10,6 +10,7 @@ class Hash:
         self.tamanho = tamanho
         self.hash_table = [[] for i in range(self.tamanho)] # cria uma lista de listas encadeadas independentes
         self.users_top_20_cache = [] # tuple (userdId, list)
+
      
 
 # Função de Hash para definir o local, retorna a key de onde o valor
@@ -42,11 +43,14 @@ class Hash:
             if self.hash_table[position][i].id == id:
                 return self.hash_table[position][i]
     
-    def get_users_top20(self, user_id):
+
+    # funções da hash de usuários 
+    # inicio:
+    def get_user_top20(self, user_id):
         ratings = []
         players = []
         position = user_id % self.tamanho
-        # pega o usuario e oq ele votou
+        # pega o usuario e em quem ele votou e a quantidade
         for user in self.hash_table[position]:
             if user.id == user_id:
                 ratings.append(user.player_rating)
@@ -55,17 +59,36 @@ class Hash:
         # orr_ratings = ratings.copy()
         # orr_ratings.sort(reverse=True)
 
-        orr_ratings = []
-        ratings_already_checked = []        
-        i = 0
-        while i != 20:
+        orr_ratings = ratings.copy()
+
+        # selection sort
+        maior = -1
+        for j in range(0, 20): # vai pegar apenas os 20 maiores, ou seja , nao ordena todo o vetor so as 20 primeiras posicoes
             maior = -1
-            for rating in ratings:
-                if rating > maior and rating not in ratings_already_checked:
-                    maior = rating
+            index = 0
+            for i in range(j, len(orr_ratings)):
+                if orr_ratings[i] > maior:
+                    index = i
+                    maior = orr_ratings[i]
+            orr_ratings[j],orr_ratings[index] = orr_ratings[index], orr_ratings[j]
 
-            orr_ratings.append(maior)
-            ratings_already_checked.append(maior)
-            i += 1
-
-        print(ratings)
+        orr_ratings = orr_ratings[0:20]
+        print('sofifa_id,name,player_positions,rating,count')
+        for rating in orr_ratings:
+            index = ratings.index(rating)
+            player = players[index]
+            players.pop(index)
+            ratings.pop(index)
+            print(f'{player.id},{player.name},{player.player_positions},{player.get_rating()},{player.total_avaliacoes}')
+    
+    # fim
+    
+    # Funções da Hash de jogadores
+    # tags devem vir no formato de string seperadas por vígula
+    def tags(self, tags=str):
+        tags = tags.split(',')
+        for i in range(0, len(self.hash_table)):
+            for player in self.hash_table[i]:
+                if player.tags.includes(tags):
+                    pass
+                

@@ -16,7 +16,8 @@ if __name__== '__main__':
         next(players)
         for linha in players:
             linha = linha[0:len(linha) - 1] # utilizado para remover o \n
-            data = linha.split(',', 3)
+            data = linha.split(',', 2)
+
             jogadores.add(data, 'Player')
 
     # adicionando a nota e os usuários (essa parte do codigo ta demorando um pouco pra rodar)
@@ -38,10 +39,7 @@ if __name__== '__main__':
             userId = int(row[0])
             sofifa_id = int(row[1])
             rating = float(row[2])
-            
 
-            users.add(userId, 'User', sofifa_id, rating)
-            
             if lastIdChecked != sofifa_id:
                 lastIdChecked = sofifa_id
                 player = jogadores.consulta(sofifa_id)
@@ -49,13 +47,14 @@ if __name__== '__main__':
                 players_cache.append(player)
                 player_aux = player
                 index += 1
-               
+        
             else:
                 player = players_cache[index]
                 player.set_rating(rating)
                 player_aux = player
-      
             
+            users.add(userId, 'User', player_aux, rating)
+
            
 
                 
@@ -85,7 +84,7 @@ if __name__== '__main__':
 
 
 
-users.get_users_top20(52505)
+(users.get_users_top20(52505))
 print(time.time() - start_time)
                     
                     
