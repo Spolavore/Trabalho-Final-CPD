@@ -84,8 +84,8 @@ if __name__== '__main__':
                     player.tags.append(tag)
 
 
-teste = users.consulta(52505)
-print(teste.players_ratings)
+
+users.get_users_top20(52505)
 print(time.time() - start_time)
                     
                     

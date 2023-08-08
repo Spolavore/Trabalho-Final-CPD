@@ -9,6 +9,7 @@ class Hash:
     def __init__(self, tamanho):
         self.tamanho = tamanho
         self.hash_table = [[] for i in range(self.tamanho)] # cria uma lista de listas encadeadas independentes
+        self.users_top_20_cache = [] # tuple (userdId, list)
      
 
 # Função de Hash para definir o local, retorna a key de onde o valor
@@ -31,8 +32,7 @@ class Hash:
         elif type == 'User':
             #infos == id
             position = int(infos) % self.tamanho
-            new_user = User(infos)
-            new_user.add_players_info(playerInfos,rating)
+            new_user = User(infos, playerInfos, rating)
             self.hash_table[position].append(new_user)
     
     def consulta(self, id):
@@ -43,4 +43,29 @@ class Hash:
                 return self.hash_table[position][i]
     
     def get_users_top20(self, user_id):
-        pass
+        ratings = []
+        players = []
+        position = user_id % self.tamanho
+        # pega o usuario e oq ele votou
+        for user in self.hash_table[position]:
+            if user.id == user_id:
+                ratings.append(user.player_rating)
+                players.append(user.player_rated)
+        
+        # orr_ratings = ratings.copy()
+        # orr_ratings.sort(reverse=True)
+
+        orr_ratings = []
+        ratings_already_checked = []        
+        i = 0
+        while i != 20:
+            maior = -1
+            for rating in ratings:
+                if rating > maior and rating not in ratings_already_checked:
+                    maior = rating
+
+            orr_ratings.append(maior)
+            ratings_already_checked.append(maior)
+            i += 1
+
+        print(ratings)
