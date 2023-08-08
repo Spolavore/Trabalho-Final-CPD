@@ -1,39 +1,6 @@
 from Players import Players
 from User import User
 
-class ListaEncadeada:
-    lista_consultas = []
-
-    def __init__(self):
-        self.inicio = None  
-
-    def insere_no_inicio(self, novo_id, novo_content='', type='Players', playerInfos=None):
-        if type == 'User':
-            novoNodo = User(novo_id)
-            novoNodo.players_rated.append(playerInfos)
-        elif type == 'Players':
-            novoNodo = Players(novo_id, novo_content)
-       
-        novoNodo.proximo = self.inicio
-        self.inicio = novoNodo
- 
-    def tamanho_lista(self):
-        contador = 0
-        aux = self.inicio
-        while(aux != None): 
-            contador+=1           
-            aux = aux.proximo
-        return contador
-
-    def getInfos(self, id):
-        
-        aux_nodo = self.inicio
-        while aux_nodo != None:
-            if id == aux_nodo.id:
-                return aux_nodo
-            else:
-                aux_nodo = aux_nodo.proximo
-
 # Definicao da class hash,
 # recebe na inicializacao o tamanho dela
 class Hash:
@@ -41,9 +8,8 @@ class Hash:
     
     def __init__(self, tamanho):
         self.tamanho = tamanho
-        self.hash_table = [ListaEncadeada() for i in range(self.tamanho)] # cria uma lista de listas encadeadas independentes
+        self.hash_table = [[] for i in range(self.tamanho)] # cria uma lista de listas encadeadas independentes
      
-    
 
 # Função de Hash para definir o local, retorna a key de onde o valor
 # está ou deve ser inserido
@@ -53,20 +19,28 @@ class Hash:
         
 
     # vai precisar ser mudado
-    def add(self, infos, type='Player', playerInfos=None):
+    def add(self, infos, type='Player', playerInfos=None, rating=None):
         if type == 'Player':
             id = int(infos[0])
             content = infos[1:]
             # pega a posicao que o dado deve ser inserido com base na funcao hash
             position = id % self.tamanho
-            self.hash_table[position].insere_no_inicio(id, content)
+            new_player = Players(id, content)
+            self.hash_table[position].append(new_player)
+
         elif type == 'User':
             #infos == id
             position = int(infos) % self.tamanho
-            self.hash_table[position].insere_no_inicio(novo_id=infos, type='User', playerInfos=playerInfos)
+            new_user = User(infos)
+            new_user.add_players_info(playerInfos,rating)
+            self.hash_table[position].append(new_user)
     
-
     def consulta(self, id):
         key = int(id)
         position = key % self.tamanho
-        return self.hash_table[position].getInfos(key)
+        for i in range(0, len(self.hash_table[position])):
+            if self.hash_table[position][i].id == id:
+                return self.hash_table[position][i]
+    
+    def get_users_top20(self, user_id):
+        pass
