@@ -9,15 +9,12 @@ if __name__== '__main__':
     # pré-processamento #
     jogadores = Hash(3613)
     users = Hash(3613)
-
-
     # #adicionando o jogador e suas características
     with open('./tables/players.csv') as players:
         next(players)
         for linha in players:
             linha = linha[0:len(linha) - 1] # utilizado para remover o \n
             data = linha.split(',', 2)
-
             jogadores.add(data, 'Player')
 
     # adicionando a nota e os usuários (essa parte do codigo ta demorando um pouco pra rodar)
@@ -84,8 +81,10 @@ if __name__== '__main__':
 
 
 
-(users.get_users_top20(52505))
+# (jogadores.tags('Brazil, Dribbler'))
+users.get_user_top20(67376)
 print(time.time() - start_time)
+
                     
                     
 
