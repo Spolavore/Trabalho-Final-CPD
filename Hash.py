@@ -1,39 +1,6 @@
 from Players import Players
 from User import User
 
-class ListaEncadeada:
-    lista_consultas = []
-
-    def __init__(self):
-        self.inicio = None  
-
-    def insere_no_inicio(self, novo_id, novo_content='', type='Players', playerInfos=None):
-        if type == 'User':
-            novoNodo = User(novo_id)
-            novoNodo.players_rated.append(playerInfos)
-        elif type == 'Players':
-            novoNodo = Players(novo_id, novo_content)
-       
-        novoNodo.proximo = self.inicio
-        self.inicio = novoNodo
- 
-    def tamanho_lista(self):
-        contador = 0
-        aux = self.inicio
-        while(aux != None): 
-            contador+=1           
-            aux = aux.proximo
-        return contador
-
-    def getInfos(self, id):
-        
-        aux_nodo = self.inicio
-        while aux_nodo != None:
-            if id == aux_nodo.id:
-                return aux_nodo
-            else:
-                aux_nodo = aux_nodo.proximo
-
 # Definicao da class hash,
 # recebe na inicializacao o tamanho dela
 class Hash:
@@ -41,9 +8,10 @@ class Hash:
     
     def __init__(self, tamanho):
         self.tamanho = tamanho
-        self.hash_table = [ListaEncadeada() for i in range(self.tamanho)] # cria uma lista de listas encadeadas independentes
+        self.hash_table = [[] for i in range(self.tamanho)] # cria uma lista de listas encadeadas independentes
+        self.users_top_20_cache = [] # tuple (userdId, list)
+
      
-    
 
 # Função de Hash para definir o local, retorna a key de onde o valor
 # está ou deve ser inserido
@@ -53,20 +21,74 @@ class Hash:
         
 
     # vai precisar ser mudado
-    def add(self, infos, type='Player', playerInfos=None):
+    def add(self, infos, type='Player', playerInfos=None, rating=None):
         if type == 'Player':
             id = int(infos[0])
             content = infos[1:]
             # pega a posicao que o dado deve ser inserido com base na funcao hash
             position = id % self.tamanho
-            self.hash_table[position].insere_no_inicio(id, content)
+            new_player = Players(id, content)
+            self.hash_table[position].append(new_player)
+
         elif type == 'User':
             #infos == id
             position = int(infos) % self.tamanho
-            self.hash_table[position].insere_no_inicio(novo_id=infos, type='User', playerInfos=playerInfos)
+            new_user = User(infos, playerInfos, rating)
+            self.hash_table[position].append(new_user)
     
-
     def consulta(self, id):
         key = int(id)
         position = key % self.tamanho
-        return self.hash_table[position].getInfos(key)
+        for i in range(0, len(self.hash_table[position])):
+            if self.hash_table[position][i].id == id:
+                return self.hash_table[position][i]
+    
+
+    # funções da hash de usuários 
+    # inicio:
+    def get_user_top20(self, user_id):
+        ratings = []
+        players = []
+        position = user_id % self.tamanho
+        # pega o usuario e em quem ele votou e a quantidade
+        for user in self.hash_table[position]:
+            if user.id == user_id:
+                ratings.append(user.player_rating)
+                players.append(user.player_rated)
+        
+        # orr_ratings = ratings.copy()
+        # orr_ratings.sort(reverse=True)
+
+        orr_ratings = ratings.copy()
+
+        # selection sort
+        maior = -1
+        for j in range(0, 20): # vai pegar apenas os 20 maiores, ou seja , nao ordena todo o vetor so as 20 primeiras posicoes
+            maior = -1
+            index = 0
+            for i in range(j, len(orr_ratings)):
+                if orr_ratings[i] > maior:
+                    index = i
+                    maior = orr_ratings[i]
+            orr_ratings[j],orr_ratings[index] = orr_ratings[index], orr_ratings[j]
+
+        orr_ratings = orr_ratings[0:20]
+        print('sofifa_id,name,player_positions,rating,count')
+        for rating in orr_ratings:
+            index = ratings.index(rating)
+            player = players[index]
+            players.pop(index)
+            ratings.pop(index)
+            print(f'{player.id},{player.name},{player.player_positions},{player.get_rating()},{player.total_avaliacoes}')
+    
+    # fim
+    
+    # Funções da Hash de jogadores
+    # tags devem vir no formato de string seperadas por vígula
+    def tags(self, tags=str):
+        tags = tags.split(',')
+        for i in range(0, len(self.hash_table)):
+            for player in self.hash_table[i]:
+                if player.tags.includes(tags):
+                    pass
+                
