@@ -2,22 +2,31 @@ import time
 import csv
 from Hash import Hash
 from Trie import Trie
+from rich.table import Table
+from rich.console import Console
+from rich.progress import Progress
 
 
+
+console = Console()
 if __name__== '__main__':
     start_time = time.time()
+    console.print('Iniciando pré-processamento...', style='bold red')
     # pré-processamento #
     jogadores = Hash(3613)
     users = Hash(3613)
     # #adicionando o jogador e suas características
+    console.print('->Populando a Hash dos jogadores', style='red')
     with open('./tables/players.csv') as players:
         next(players)
         for linha in players:
             linha = linha[0:len(linha) - 1] # utilizado para remover o \n
             data = linha.split(',', 2)
             jogadores.add(data, 'Player')
+    console.print('     --Processo 1 concluído', style='green italic')
 
     # adicionando a nota e os usuários (essa parte do codigo ta demorando um pouco pra rodar)
+    console.print('->Populando a Hash dos jogadores com suas respectivas notas e populando Hash dos usuários', style='dark_orange')
     with open('./tables/rating.csv', 'r') as rating:
         csvreader = csv.reader(rating)
         next(csvreader)
@@ -53,8 +62,9 @@ if __name__== '__main__':
             users.add(userId, 'User', player_aux, rating)
 
            
+    console.print('     --Processo 2 concluído', style='green italic')
 
-                
+    console.print('->Populando a tabela Hash dos jogadores com suas tags', style='yellow')       
     with open('./tables/tags.csv', 'r') as tags:
         csvreader = csv.reader(tags)
         next(csvreader)
@@ -78,12 +88,41 @@ if __name__== '__main__':
                 player = players_cache[index]
                 if tag not in player.tag:
                     player.tags.append(tag)
+    console.print('     --Processo 2 concluído', style='green italic')
 
 
+time = time.time() - start_time
+console.print(f'Processamento terminado em : {time} :smile:',style='cyan')
+print('\n\n\n')
 
-# (jogadores.tags('Brazil, Dribbler'))
-users.get_user_top20(67376)
-print(time.time() - start_time)
+
+functions = Table(title='Comandos', title_style='bold red')
+functions.add_column('Players revidados por usuários', style='cyan')
+functions.add_column('Pesquisas sobre tags de jogadores')
+functions.add_row('user id_do_usuário','tags tag1 tag2 tag3 etc...', style='cyan')
+functions.add_row('\n-Exemplo: user 65733', '\n-Exemplo: tags Brazil Dribbler ', style='italic light_sky_blue3')
+
+console.print(functions)
+console.print('Para sair escreva "quit()" ', style='grey69',width=50)
+
+
+while command != 'quit()':
+    command = input()
+    aux = command.split(' ')
+    if aux[0] == 'user':
+        if len(aux) > 2:
+            console.print('ERRO: COMANDO MAL FORMATADO :angry:', style='bold red')
+        else:
+            userId = int(aux[1])
+            users.get_user_top20(userId)
+    elif aux[0] == 'tags':
+        tags = ','.join(aux[1:len(aux)])
+        jogadores.tags(tags)
+    else:
+        console.print('ERRO: COMANDO MAL FORMATADO :angry:', style='bold red')
+
+# (jogadores.tags('Brazil,Dribbler'))
+# users.get_user_top20(67376)
 
                     
                     

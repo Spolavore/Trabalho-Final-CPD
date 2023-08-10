@@ -76,7 +76,7 @@ class Hash:
             orr_ratings[j],orr_ratings[index] = orr_ratings[index], orr_ratings[j]
 
         orr_ratings = orr_ratings[0:20]
-        table = Table(title=f'Tags')
+        table = Table(title=f'Usuário: {user_id}')
         table.add_column("sofifa_id", style='purple')
         table.add_column("name", style='white')
         table.add_column("player_positions", style='purple')
@@ -94,29 +94,34 @@ class Hash:
     # fim
     
     # Funções da Hash de jogadores
-    # tags devem vir no formato de string seperadas por vígula
+    # tags devem vir no formato de string seperadas por vígula sem espaco
     def tags(self, tags=str):
         tags = tags.split(',')
         players_with_tags = []
+        all_tags_in = False
         for i in range(0, len(self.hash_table)):
-            for player in self.hash_table[i]:
-                all_tags_in = False
+            for player in self.hash_table[i]:  
                 for tag in tags:
                     if tag in player.tags:
                         all_tags_in = True
                     else:
+                        all_tags_in = False
                         break
                 if all_tags_in:
                     players_with_tags.append(player)
         
-        table = Table(title=f'Tags')
-        table.add_column("sofifa_id", style='cyan')
-        table.add_column("name", style='white')
-        table.add_column("player_positions", style='cyan')
-        table.add_column("rating", style='white')
-        table.add_column("count", style='cyan')
-        for player in players_with_tags:
-            table.add_row(f'{player.id}', f'{player.name}', f'{player.player_positions}', f'{player.get_rating()}', f'{player.total_avaliacoes}')
-
         console = Console()
-        console.print(table)
+        if len(players_with_tags) != 0:
+            table = Table(title=f'Tags')
+            table.add_column("sofifa_id", style='cyan')
+            table.add_column("name", style='white')
+            table.add_column("player_positions", style='cyan')
+            table.add_column("rating", style='white')
+            table.add_column("count", style='cyan')
+            for player in players_with_tags:
+                table.add_row(f'{player.id}', f'{player.name}', f'{player.player_positions}', f'{player.get_rating()}', f'{player.total_avaliacoes}')
+
+            
+            console.print(table)
+        else:
+            console.print('Nenhum jogador encontrado com essas Tags', style='red')
