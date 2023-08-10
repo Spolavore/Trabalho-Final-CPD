@@ -59,11 +59,11 @@ class Hash:
                 ratings.append(user.player_rating)
                 players.append(user.player_rated)
         
+       
         # orr_ratings = ratings.copy()
         # orr_ratings.sort(reverse=True)
 
         orr_ratings = ratings.copy()
-
         # selection sort
         maior = -1
         for j in range(0, 20): # vai pegar apenas os 20 maiores, ou seja , nao ordena todo o vetor so as 20 primeiras posicoes
@@ -75,22 +75,25 @@ class Hash:
                     maior = orr_ratings[i]
             orr_ratings[j],orr_ratings[index] = orr_ratings[index], orr_ratings[j]
 
-        orr_ratings = orr_ratings[0:20]
-        table = Table(title=f'Usuário: {user_id}')
-        table.add_column("sofifa_id", style='purple')
-        table.add_column("name", style='white')
-        table.add_column("player_positions", style='purple')
-        table.add_column("rating", style='white')
-        table.add_column("count", style='purple')
-        for rating in orr_ratings:
-            index = ratings.index(rating)
-            player = players[index]
-            players.pop(index)
-            ratings.pop(index)
-            table.add_row(f'{player.id}',f'{player.name}',f'{player.player_positions}',f'{player.get_rating()}',f'{player.total_avaliacoes}')
 
         console = Console()
-        console.print(table)
+        if len(orr_ratings) != 0 :
+            orr_ratings = orr_ratings[0:20]
+            table = Table(title=f'Usuário: {user_id}')
+            table.add_column("sofifa_id", style='purple')
+            table.add_column("name", style='white')
+            table.add_column("player_positions", style='purple')
+            table.add_column("rating", style='white')
+            table.add_column("count", style='purple')
+            for rating in orr_ratings:
+                index = ratings.index(rating)
+                player = players[index]
+                players.pop(index)
+                ratings.pop(index)
+                table.add_row(f'{player.id}',f'{player.name}',f'{player.player_positions}',f'{player.get_rating()}',f'{player.total_avaliacoes}')
+            console.print(table)
+        else:
+            console.print('Usuário não encontrado', style='red')
     # fim
     
     # Funções da Hash de jogadores
