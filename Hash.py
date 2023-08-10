@@ -1,5 +1,8 @@
 from Players import Players
 from User import User
+from rich.table import Table
+from rich.console import Console
+
 
 # Definicao da class hash,
 # recebe na inicializacao o tamanho dela
@@ -56,11 +59,11 @@ class Hash:
                 ratings.append(user.player_rating)
                 players.append(user.player_rated)
         
+       
         # orr_ratings = ratings.copy()
         # orr_ratings.sort(reverse=True)
 
         orr_ratings = ratings.copy()
-
         # selection sort
         maior = -1
         for j in range(0, 20): # vai pegar apenas os 20 maiores, ou seja , nao ordena todo o vetor so as 20 primeiras posicoes
@@ -72,23 +75,56 @@ class Hash:
                     maior = orr_ratings[i]
             orr_ratings[j],orr_ratings[index] = orr_ratings[index], orr_ratings[j]
 
-        orr_ratings = orr_ratings[0:20]
-        print('sofifa_id,name,player_positions,rating,count')
-        for rating in orr_ratings:
-            index = ratings.index(rating)
-            player = players[index]
-            players.pop(index)
-            ratings.pop(index)
-            print(f'{player.id},{player.name},{player.player_positions},{player.get_rating()},{player.total_avaliacoes}')
-    
+
+        console = Console()
+        if len(orr_ratings) != 0 :
+            orr_ratings = orr_ratings[0:20]
+            table = Table(title=f'Usuário: {user_id}')
+            table.add_column("sofifa_id", style='purple')
+            table.add_column("name", style='white')
+            table.add_column("player_positions", style='purple')
+            table.add_column("rating", style='white')
+            table.add_column("count", style='purple')
+            for rating in orr_ratings:
+                index = ratings.index(rating)
+                player = players[index]
+                players.pop(index)
+                ratings.pop(index)
+                table.add_row(f'{player.id}',f'{player.name}',f'{player.player_positions}',f'{player.get_rating()}',f'{player.total_avaliacoes}')
+            console.print(table)
+        else:
+            console.print('Usuário não encontrado', style='red')
     # fim
     
     # Funções da Hash de jogadores
-    # tags devem vir no formato de string seperadas por vígula
+    # tags devem vir no formato de string seperadas por vígula sem espaco
     def tags(self, tags=str):
         tags = tags.split(',')
+        players_with_tags = []
+        all_tags_in = False
         for i in range(0, len(self.hash_table)):
-            for player in self.hash_table[i]:
-                if player.tags.includes(tags):
-                    pass
-                
+            for player in self.hash_table[i]:  
+                for tag in tags:
+                    if tag in player.tags:
+                        all_tags_in = True
+                    else:
+                        all_tags_in = False
+                        break
+                if all_tags_in:
+                    players_with_tags.append(player)
+        
+        console = Console()
+        if len(players_with_tags) != 0:
+            table = Table(title=f'Tags')
+            table.add_column("sofifa_id", style='cyan')
+            table.add_column("name", style='white')
+            table.add_column("player_positions", style='cyan')
+            table.add_column("rating", style='white')
+            table.add_column("count", style='cyan')
+            for player in players_with_tags:
+                table.add_row(f'{player.id}', f'{player.name}', f'{player.player_positions}', f'{player.get_rating()}', f'{player.total_avaliacoes}')
+
+            
+            console.print(table)
+        else:
+            console.print('Nenhum jogador encontrado com essas Tags', style='red')
