@@ -139,11 +139,11 @@ class Hash:
         console = Console()
         if len(lista_ids) != 0:
             table = Table(title=f'Jogadores com prefixo em comum')
-            table.add_column("sofifa_id", style='#FFB6C1')
+            table.add_column("sofifa_id", style='#00FA9A')
             table.add_column("name", style='white')
-            table.add_column("player_positions", style='#FFB6C1')
+            table.add_column("player_positions", style='#00FA9A')
             table.add_column("rating", style='white')
-            table.add_column("count", style='#FFB6C1')
+            table.add_column("count", style='#00FA9A')
             for id in lista_ids:
                 player = self.consulta(id)
                 table.add_row(f'{player.id}', f'{player.name}', f'{player.player_positions}', f'{player.get_rating()}', f'{player.total_avaliacoes}')
