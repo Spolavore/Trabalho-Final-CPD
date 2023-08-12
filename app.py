@@ -15,6 +15,7 @@ if __name__== '__main__':
     # pré-processamento #
     jogadores = Hash(3613)
     users = Hash(3613)
+    trie = Trie()
     # #adicionando o jogador e suas características
     console.print('->Populando a Hash dos jogadores', style='red')
     with open('./tables/players.csv') as players:
@@ -23,6 +24,8 @@ if __name__== '__main__':
             linha = linha[0:len(linha) - 1] # utilizado para remover o \n
             data = linha.split(',', 2)
             jogadores.add(data, 'Player')
+            #print("Dados: "+str(data))
+            trie.insere(int(data[0]),data[1])
     console.print('     --Processo 1 concluído', style='green italic')
 
     # adicionando a nota e os usuários (essa parte do codigo ta demorando um pouco pra rodar)
@@ -97,16 +100,19 @@ print('\n\n\n')
 
 
 functions = Table(title='Comandos', title_style='bold red')
-functions.add_column('Players revidados por usuários', style='cyan')
+functions.add_column('Pesquisa sobre os nomes de jogadores', style='cyan')
+functions.add_column('Players revisados por usuários')
 functions.add_column('Pesquisas sobre tags de jogadores')
-functions.add_row('user id_do_usuário','tags tag1 tag2 tag3 etc...', style='cyan')
-functions.add_row('\n-Exemplo: user 65733', '\n-Exemplo: tags Brazil,Clinical Finisher,etc ', style='italic light_sky_blue3')
+functions.add_column('Pesquisas sobre os melhores jogadores de uma determinada posição')
+
+functions.add_row('player <nome ou prefixo>','user id_do_usuário','tags tag1, tag2, tag3, etc...',' top<n> <position>+' , style='cyan')
+functions.add_row('\n-Exemplo: player Fer', '\n-Exemplo: user 65733','\n-Exemplo: tags Brazil,Clinical Finisher,etc', '\nExemplo: top10 ST', style='italic light_sky_blue3')
 
 console.print(functions)
 console.print('Para sair escreva "quit()" ', style='grey69',width=50)
 
 command = ''
-while command != 'quit()':
+while True:
     command = input()
     aux = command.split(' ',1)
     if aux[0] == 'user':
@@ -122,5 +128,19 @@ while command != 'quit()':
     elif aux[0] == 'commands':
         console.print(functions)
         console.print('Para sair escreva "quit()" ', style='grey69',width=50)
+    elif aux[0] == 'player':
+        jogadores_c_prefixo = trie.busca_prefixo(aux[1])
+        jogadores.jogadores_com_prefixo(jogadores_c_prefixo)
+    elif aux[0][0:3] == 'top':
+        if aux[0][3:].isnumeric():
+            n = int(aux[0][3:])
+            position = aux[1] if len(aux) > 1 else ''
+            jogadores.top_n_jogadores(n, position)
+        else:
+            console.print('ERRO: COMANDO MAL FORMATADO :angry:', style='bold red')
+
+    elif aux[0] == 'quit()':
+        console.print('\nFINALIZANDO O PROGRAMA ... :smiley:\n', style='bold blue')
+        break
     else:
         console.print('ERRO: COMANDO MAL FORMATADO :angry:', style='bold red')

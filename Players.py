@@ -13,7 +13,7 @@ class Players:
         self.total_avaliacoes += 1
     
     def get_rating(self):
-        return round( (self.rating_acumulative / self.total_avaliacoes), 6)
+        return round( (self.rating_acumulative / self.total_avaliacoes), 6) if self.total_avaliacoes != 0 else 0.00000
 
 
     
