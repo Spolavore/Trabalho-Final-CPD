@@ -4,7 +4,6 @@ from Hash import Hash
 from Trie import Trie
 from rich.table import Table
 from rich.console import Console
-from rich.progress import Progress
 
 
 
@@ -30,13 +29,13 @@ if __name__== '__main__':
 
     # adicionando a nota e os usuários (essa parte do codigo ta demorando um pouco pra rodar)
     console.print('->Populando a Hash dos jogadores com suas respectivas notas e populando Hash dos usuários', style='dark_orange')
+    players_cache = []  # lista que guardará o cache dos players, ou seja, seu Módulo
     with open('./tables/rating.csv', 'r') as rating:
         csvreader = csv.reader(rating)
         next(csvreader)
     
 
         lastIdChecked = None # responsável por saber qual último sofifa_id visitado
-        players_cache = []  # lista que guardará o cache dos players, ou seja, seu Módulo
         index = -1          # index utilizável por apontar para o modulo certo do player, so será mudado quando 
                             # um sofifa_id diferente for encontrado
 
@@ -105,7 +104,7 @@ functions.add_column('Players revisados por usuários')
 functions.add_column('Pesquisas sobre tags de jogadores')
 functions.add_column('Pesquisas sobre os melhores jogadores de uma determinada posição')
 
-functions.add_row('player <nome ou prefixo>','user id_do_usuário','tags tag1, tag2, tag3, etc...',' top<n> <position>+' , style='cyan')
+functions.add_row('player <nome ou prefixo>','user id_do_usuário','tags tag1, tag2, tag3, etc...',' top<n> <position>' , style='cyan')
 functions.add_row('\n-Exemplo: player Fer', '\n-Exemplo: user 65733','\n-Exemplo: tags Brazil,Clinical Finisher,etc', '\nExemplo: top10 ST', style='italic light_sky_blue3')
 
 console.print(functions)
@@ -128,7 +127,7 @@ while True:
     elif aux[0] == 'commands':
         console.print(functions)
         console.print('Para sair escreva "quit()" ', style='grey69',width=50)
-    elif aux[0] == 'player':
+    elif aux[0] == 'player' and len(aux) > 1:
         jogadores_c_prefixo = trie.busca_prefixo(aux[1])
         jogadores.jogadores_com_prefixo(jogadores_c_prefixo)
     elif aux[0][0:3] == 'top':

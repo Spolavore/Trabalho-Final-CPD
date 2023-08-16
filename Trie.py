@@ -1,8 +1,8 @@
 class Nodo:
     def __init__(self):
-        self.filhos = {}
+        self.filhos = []    #Lista de tuplas (letra, nodo_filho)
         self.fim_da_palavra = False
-        self.player_ids = []  # Lista de IDs de jogadores associados a este nó
+        self.player_id = None  # ID do jogador associado a este nó
 
 class Trie:
     def __init__(self):
@@ -11,24 +11,36 @@ class Trie:
     def insere(self, player_id, word):  # Adiciona o ID do jogador também
         nodo = self.raiz
         for letra in word:
-            if letra not in nodo.filhos:
-                nodo.filhos[letra] = Nodo()
-            nodo = nodo.filhos[letra]
-            nodo.player_ids.append(player_id)  # Adiciona o ID do jogador a este nó
+            found = False
+            for char, filho in nodo.filhos:
+                if char == letra:
+                    nodo = filho
+                    found = True
+                    break
+            if not found:
+                novo_nodo = Nodo()
+                nodo.filhos.append((letra, novo_nodo))
+                nodo = novo_nodo
+        nodo.player_id = player_id  # Adiciona o ID do jogador a este nó
         nodo.fim_da_palavra = True
 
     def busca_prefixo(self, word):
         nodo = self.raiz
         for letra in word:
-            if letra not in nodo.filhos:
+            found = False
+            for char, filho in nodo.filhos:
+                if char == letra:
+                    nodo = filho
+                    found = True
+                    break
+            if not found:
                 return []
-            nodo = nodo.filhos[letra]
         return self.busca_palavras_com_prefixo(nodo, word)
 
     def busca_palavras_com_prefixo(self, nodo, prefixo):
         results = set()  # Usar um conjunto para evitar duplicação de IDs
         if nodo.fim_da_palavra:
-            results.update(nodo.player_ids)  # Adiciona os IDs dos jogadores associados
-        for letra, nodo_filho in nodo.filhos.items():
+            results.add(nodo.player_id)  # Adiciona os IDs dos jogadores associados
+        for letra, nodo_filho in nodo.filhos:
             results.update(self.busca_palavras_com_prefixo(nodo_filho, prefixo+letra))
         return list(results)

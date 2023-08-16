@@ -1,13 +1,19 @@
 from Trie import Trie
+import pandas as pd
+import time
+import csv
+from rich.table import Table
+from rich.console import Console
 
 
-name_list = ["ana", "anabela", "andre", "bruna", "bruno"]
+
+command = input()
+aux = command.split(' ',1)
+
 trie = Trie()
-i = 0
-for name in name_list:
-    trie.insere(i,name)
-    i+=1
-
-prefix = "ana"
-matching_names = trie.busca_prefixo(prefix)
-print(matching_names)
+trie.insere(1,'abacaxi')
+trie.insere(2,'abacate')
+trie.insere(3,'acabar')
+trie.insere(4,'jogo')
+trie.insere(5,'seila')
+print(trie.busca_prefixo(aux[1]))

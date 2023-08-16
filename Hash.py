@@ -3,12 +3,7 @@ from User import User
 from rich.table import Table
 from rich.console import Console
 
-
-# Definicao da class hash,
-# recebe na inicializacao o tamanho dela
-class Hash:
-    posicoes_usadas = []
-    
+class Hash:    
     def __init__(self, tamanho):
         self.tamanho = tamanho
         self.hash_table = [[] for i in range(self.tamanho)] # cria uma lista de listas encadeadas independentes
@@ -29,19 +24,19 @@ class Hash:
             id = int(infos[0])
             content = infos[1:]
             # pega a posicao que o dado deve ser inserido com base na funcao hash
-            position = id % self.tamanho
+            position = self.get_position(id)
             new_player = Players(id, content)
             self.hash_table[position].append(new_player)
 
         elif type == 'User':
             #infos == id
-            position = int(infos) % self.tamanho
+            position = self.get_position(infos)
             new_user = User(infos, playerInfos, rating)
             self.hash_table[position].append(new_user)
     
     def consulta(self, id):
         key = int(id)
-        position = key % self.tamanho
+        position = self.get_position(key)
         for i in range(0, len(self.hash_table[position])):
             if self.hash_table[position][i].id == id:
                 return self.hash_table[position][i]
@@ -54,7 +49,7 @@ class Hash:
     def get_user_top20(self, user_id):
         ratings = []
         players = []
-        position = user_id % self.tamanho
+        position = self.get_position(user_id)
         # pega o usuario e em quem ele votou e a quantidade
         for user in self.hash_table[position]:
             if user.id == user_id:
@@ -179,8 +174,7 @@ class Hash:
                 del jogadores[index]
             
             
-        
-            table = Table(title=f'Top {n} jogadores na posição \'{position.upper()}\'')
+            table = Table(title=f'Top {n} jogadores na posição \'{position.upper()}\'') if position != '' else Table(title=f'Top {n} jogadores')
             table.add_column("Rank", style='#AFEEEE')
             table.add_column("sofifa_id", style='#F4A460')
             table.add_column("name", style='white')
@@ -195,4 +189,3 @@ class Hash:
             console.print(table)
         else:
             console.print('Nenhum jogador encontrado nessas posições', style='red')
-
